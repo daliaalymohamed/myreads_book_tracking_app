@@ -102,7 +102,7 @@ class BooksApp extends React.Component {
           </Switch>
           <footer>
             <p> MyReads – A Book Tracking App </p>
-            <p> Show project on <a href="#">Github</a></p>
+            <p> Show project on <a href="https://github.com/daliaalymohamed/myreads_book_tracking_app">Github</a></p>
             <p> © 2021 </p>
           </footer>
         </div>  

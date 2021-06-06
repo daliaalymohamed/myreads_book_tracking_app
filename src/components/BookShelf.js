@@ -4,7 +4,6 @@ import Book from './Book';
 
 const BookShelf = (props) => {
         const { shelf, books, onMovingBook } = props;
-        //console.log("shelf => ", shelf)
         const books_in_shelf = books.filter(book => book.shelf === shelf.key)
     
         return (
@@ -16,7 +15,7 @@ const BookShelf = (props) => {
                             books_in_shelf.length > 0 
                             ?
                                 books_in_shelf.map(book => (
-                                    <Book key={book.id} book={book} changeShelf={onMovingBook}/>
+                                    <Book key={book.id} book={book} changeShelf={onMovingBook} shelf={shelf}/>
                                 ))
                             : <p style={{fontSize: '20px', fontWeight: 'bolder', color: '#2e7c31'}}>No books available on this shelf</p>
                         }

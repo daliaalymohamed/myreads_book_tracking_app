@@ -4,7 +4,7 @@ import addImage from '../icons/add.svg'
 
 class Book extends Component { 
     static propTypes = {
-        shelf: PropTypes.object,
+        shelf: PropTypes.string,
         changeShelf: PropTypes.func,
         book: PropTypes.object.isRequired
     }
@@ -17,12 +17,11 @@ class Book extends Component {
         //console.log("event => ", event.target.value)
         this.setState({
             option: event.target.value
-        }, () => console.log("after change shelf => ", this.state.option))
+        })
         this.props.changeShelf(this.props.book, event.target.value)
     }
     render() {
         const { book } = this.props;
-        console.log("book => ", book)
         return (
             <li>
                 <div className="book">
@@ -33,8 +32,8 @@ class Book extends Component {
                                                                             : addImage})` }}>
                         </div>
                         <div className="book-shelf-changer">
-                            <select onChange={this.handleSelect} defaultValue={'move'}>
-                                <option value="move" disabled>
+                            <select onChange={this.handleSelect} value={this.props.shelf}>
+                                <option value="" disabled>
                                     Move to...
                                 </option>
                                 <option value="currentlyReading">Currently Reading</option>

@@ -2,34 +2,59 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Book from './Book';
+import * as BooksAPI from '../BooksAPI'
 
 class SearchBar extends Component {
     static propTypes = {
-        S_books: PropTypes.array,
         books: PropTypes.array,
         onMove: PropTypes.func,
-        hasError: PropTypes.bool
     }
 
     state = {
-        value: "",
+        searched_books_library: [],
+        query: "",
+        error: false
     }
+
+    filterBy = (booksArray, query) => {
+        return booksArray.filter(b => {
+          return b.title.toLowerCase().includes(query.toLowerCase()) || 
+                 b.authors.map(a => {
+                   return a.toLowerCase().includes(query.toLowerCase())
+                 }) 
+          }
+        )
+      }
+    updateQuery = (query) => {
+        if(query.length > 0) {
+          BooksAPI.search(query)
+          .then( books => {
+            if (books.error) {
+              this.setState({ searched_books_library: [], error: true });
+            } else {
+              this.filterBy(books, query)
+              this.setState({ searched_books_library: books, error: false });
+            }
+          })
+        } else {
+          this.setState({ searched_books_library: [] });
+        }
+        
+      }
 
     handleChange = (val) => {
         this.setState({
-            value: val.trim()
+            query: val
         })
-        this.props.onUpdateQuery(this.state.value)   
+        this.updateQuery(val)
     }
     render () {
-        const { value } = this.state;
-        const { S_books, books, onMove, hasError } = this.props;
+        const { query, searched_books_library, error } = this.state;
+        const { books, onMove } = this.props;
 
-        const showingBooks = S_books.map(s_book => {
-            //console.log("S_book => ", s_book)
+        const showingBooks = searched_books_library.map(s_book => {
             books.map(book => {
                 if(book.id === s_book.id) {
-                    //console.log("book.shelf => ", book.shelf)
                     s_book.shelf = book.shelf
                 }
                 return book;
@@ -44,7 +69,7 @@ class SearchBar extends Component {
                     <div className="search-books-input-wrapper">
                         <input type="text" 
                                placeholder="Search by title or author"
-                               value={value}
+                               value={query}
                                onChange={(event) => this.handleChange(event.target.value)}/>
                     </div>
                 </div>
@@ -52,10 +77,13 @@ class SearchBar extends Component {
                     <ol className="books-grid">
                         { 
                             showingBooks.length > 0 && (showingBooks.map(s_book => (
-                                <Book key={s_book.id} book={s_book} shelf={s_book.shelf} changeShelf={onMove}/>
+                                <Book key={s_book.id} 
+                                      book={s_book} 
+                                      shelf={s_book.shelf ? s_book.shelf : 'none'}  
+                                      changeShelf={onMove}/>
                             )))   
                         }
-                        { hasError && (<h3 style={{fontSize: '20px', fontWeight: 'bolder', color: '#2e7c31'}}>Search returned no books. Please try again !</h3>)}
+                        { error && (<h3 style={{fontSize: '20px', fontWeight: 'bolder', color: '#2e7c31'}}>Search returned no books. Please try again !</h3>)}
                     </ol>
                 </div>
            </div>

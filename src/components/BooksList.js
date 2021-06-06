@@ -19,7 +19,6 @@ class BooksList extends Component {
                         <div>
                             {
                                 shelves.map(shelf => (
-                                    //console.log("shelf => ", shelf),
                                     <BookShelf key={shelf.key} shelf={shelf} books={books} onMovingBook={onMove}/>
                                 ))
                             }

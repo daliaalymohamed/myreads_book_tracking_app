@@ -9,9 +9,6 @@ import NotFound from './components/NotFound';
 class BooksApp extends React.Component {
   state = {
     library: [],
-    searched_books_library: [],
-    query: "",
-    error: false
   }
 
   componentDidMount() {
@@ -21,13 +18,16 @@ class BooksApp extends React.Component {
           library: booksList
         }))
       })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   moveBookToShelf = (book, shelf) => {
     const updated_library = this.state.library.map(
       currBook => {
         if(currBook.id === book.id) {
-          book.shelf = shelf
+          currBook.shelf = shelf
         }  
         return currBook
       })
@@ -37,37 +37,7 @@ class BooksApp extends React.Component {
               this.setState(() => ({
                 library: updated_library
         }))
-        console.log("bookslist", booksList)  
       }) 
-  }
-
-  filterBy = (booksArray, query) => {
-    return booksArray.filter(b => {
-      return b.title.toLowerCase().includes(query.toLowerCase()) || 
-             b.authors.map(a => {
-               return a.toLowerCase().includes(query.toLowerCase())
-             }) 
-      }
-    )
-  }
-  updateQuery = (query) => {
-    console.log("query: ", query)
-    if(query.length > 0) {
-      BooksAPI.search(query)
-      .then( books => {
-        if (books.error) {
-          console.log("books.error => ", books.error)
-          this.setState({ searched_books_library: [], error: true });
-        } else {
-          this.filterBy(books, query)
-          this.setState({ searched_books_library: books, error: false });
-        }
-      })
-    } else {
-      console.log(this.state.searched_books_library)
-      this.setState({ searched_books_library: [] });
-    }
-    
   }
 
   render() {
@@ -77,7 +47,7 @@ class BooksApp extends React.Component {
       { key: 'read', title: 'Have Read' },
     ]
 
-    const { library, searched_books_library, error } = this.state
+    const { library } = this.state
     return(
       <div className="app">
         <div className="wrapper">
@@ -91,12 +61,8 @@ class BooksApp extends React.Component {
                         onMove={this.moveBookToShelf}/>
             )} />
             <Route exact path="/search" render={() => (
-                <SearchBar S_books={searched_books_library} 
-                          books={library}
-                          onMove={this.moveBookToShelf}
-                          searchQuery={this.state.query}
-                          onUpdateQuery={this.updateQuery}
-                          hasError={error} />
+                <SearchBar books={library}
+                           onMove={this.moveBookToShelf}/>
             )} />
             <Route path="*" component={NotFound} />
           </Switch>

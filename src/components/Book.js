@@ -4,17 +4,15 @@ import addImage from '../icons/add.svg'
 
 class Book extends Component { 
     static propTypes = {
-        shelf: PropTypes.string,
         changeShelf: PropTypes.func,
         book: PropTypes.object.isRequired
     }
 
     state = {
-        option: this.props.shelf
+        option: this.props.book.shelf
     }   
 
     handleSelect = (event) => {
-        //console.log("event => ", event.target.value)
         this.setState({
             option: event.target.value
         })
@@ -32,7 +30,7 @@ class Book extends Component {
                                                                             : addImage})` }}>
                         </div>
                         <div className="book-shelf-changer">
-                            <select onChange={this.handleSelect} value={this.props.shelf}>
+                            <select onChange={this.handleSelect} value={this.props.book.shelf}>
                                 <option value="" disabled>
                                     Move to...
                                 </option>

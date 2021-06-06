@@ -15,7 +15,7 @@ const BookShelf = (props) => {
                             books_in_shelf.length > 0 
                             ?
                                 books_in_shelf.map(book => (
-                                    <Book key={book.id} book={book} changeShelf={onMovingBook} shelf={shelf}/>
+                                    <Book key={book.id} book={book} changeShelf={onMovingBook}/>
                                 ))
                             : <p style={{fontSize: '20px', fontWeight: 'bolder', color: '#2e7c31'}}>No books available on this shelf</p>
                         }

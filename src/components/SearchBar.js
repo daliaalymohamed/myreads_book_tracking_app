@@ -15,16 +15,7 @@ class SearchBar extends Component {
         query: "",
         error: false
     }
-
-    filterBy = (booksArray, query) => {
-        return booksArray.filter(b => {
-          return b.title.toLowerCase().includes(query.toLowerCase()) || 
-                 b.authors.map(a => {
-                   return a.toLowerCase().includes(query.toLowerCase())
-                 }) 
-          }
-        )
-      }
+    
     updateQuery = (query) => {
         if(query.length > 0) {
           BooksAPI.search(query)
@@ -32,7 +23,6 @@ class SearchBar extends Component {
             if (books.error) {
               this.setState({ searched_books_library: [], error: true });
             } else {
-              this.filterBy(books, query)
               this.setState({ searched_books_library: books, error: false });
             }
           })

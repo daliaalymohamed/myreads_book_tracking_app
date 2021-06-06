@@ -23,21 +23,17 @@ class BooksApp extends React.Component {
       })
   }
 
-  moveBookToShelf = (book, shelf) => {
-    const updated_library = this.state.library.map(
-      currBook => {
-        if(currBook.id === book.id) {
-          currBook.shelf = shelf
-        }  
-        return currBook
+  moveBookToShelf = (book, newShelf) => {
+    BooksAPI.update(book, newShelf)
+      .then((booksList) =>{
+        // Change the shelf property of the book object to new Shelf.
+        book.shelf = newShelf
+        //  Get the previous state book array without current book & add it to the new updated books array
+        let updated_library = this.state.library.filter((resultBook) =>resultBook.id !== book.id)
+        updated_library.push(book)
+        // Set the new state with Updated Books array
+        this.setState({library: updated_library})
       })
-      
-      BooksAPI.update(book, shelf)
-        .then( booksList => {
-              this.setState(() => ({
-                library: updated_library
-        }))
-      }) 
   }
 
   render() {

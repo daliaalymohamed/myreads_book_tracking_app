@@ -30,7 +30,7 @@ class Book extends Component {
                                                                             : addImage})` }}>
                         </div>
                         <div className="book-shelf-changer">
-                            <select onChange={this.handleSelect} value={this.props.book.shelf}>
+                            <select onChange={this.handleSelect} defaultValue={this.props.book.shelf? this.props.book.shelf : 'none'}>
                                 <option value="" disabled>
                                     Move to...
                                 </option>
